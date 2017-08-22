@@ -4,7 +4,7 @@
 
 
 **Week 34:** - Getting the basics of the app to work with API's and getting stepdata CRUD editable.  
-**Week 35:** - Getting the Circle Diagram and regular diagram to show data, and having calorie counter data acessible with the app.
-**Week 36:** - Having the UX/UI in place and hopefully completed.
-**Week 37:** - Finishing touches of the app.
+**Week 35:** - Getting the Circle Diagram and regular diagram to show data, and having calorie counter data acessible with the app.  
+**Week 36:** - Having the UX/UI in place and hopefully completed.  
+**Week 37:** - Finishing touches of the app.  
 
