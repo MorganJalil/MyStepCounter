@@ -12,8 +12,12 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
 
-        @Override
+    private static final int REQUEST_OAUTH = 1;
+    private static final String AUTH_PENDING = "auth_state_pending";
+    private boolean authInProgress = false;
+    private GoogleApiClient mApiClient;
 
+        @Override
         protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
         @Override
         public void onConnected (Bundle bundle){
     }
+
         @Override
         public void onConnectionSuspended ( int i){
     }
@@ -32,5 +37,6 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
 
         @Override
         public void onDataPoint (DataPoint dataPoint){
+
         }
     }
