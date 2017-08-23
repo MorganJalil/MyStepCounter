@@ -46,6 +46,21 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
         mApiClient.connect();
     }
 
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult){
+        if( !authInProgress) {
+            try {
+                authInProgress = true;
+                connectionResult.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
+            } catch(IntentSender.SendIntentException e) {
+
+            }
+        } else {
+            Log.e( "GoogleFit", "authInProgress");
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_OAUTH) {
@@ -59,20 +74,6 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
             }
         } else {
             Log.e("GoogleFit", "requestCode NOT request_oauth");
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult){
-        if( !authInProgress) {
-            try {
-                authInProgress = true;
-                connectionResult.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
-            } catch(IntentSender.SendIntentException e) {
-
-            }
-        } else {
-            Log.e( "GoogleFit", "authInProgress");
         }
     }
 
