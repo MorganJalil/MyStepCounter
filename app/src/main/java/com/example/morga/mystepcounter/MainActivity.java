@@ -70,12 +70,12 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
     }
 
         @Override
-        public void onConnectionFailed (ConnectionResult connectionResult){
+        public void onConnectionFailed(ConnectionResult connectionResult){
             if( !authInProgress) {
                 try {
                     authInProgress = true;
                     connectionResult.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
-                } catch (IntentSender.SendIntentException e) {
+                } catch(IntentSender.SendIntentException e) {
 
                 }
             } else {
