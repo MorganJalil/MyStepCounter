@@ -23,68 +23,70 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
     private boolean authInProgress = false;
     private GoogleApiClient mApiClient;
 
-        @Override
-        protected void onCreate (Bundle savedInstanceState){
+    @Override
+    protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-            if (savedInstanceState != null) {
-                authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
-            }
-
-            mApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(Fitness.SENSORS_API)
-                    .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-    }
-
-        @Override
-        protected void onStart() {
-            super.onStart();
-            mApiClient.connect();
+        if (savedInstanceState != null) {
+            authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
         }
 
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (requestCode == REQUEST_OAUTH) {
-                authInProgress = false;
-                if (resultCode == RESULT_OK) {
-                    if (!mApiClient.isConnecting() && !mApiClient.isConnected()) {
-                        mApiClient.connect();
-                    }
-                } else if (resultCode == RESULT_CANCELED) {
-                    Log.e("GoogleFit", "RESULT_CANCELED");
+        mApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Fitness.SENSORS_API)
+                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mApiClient.connect();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_OAUTH) {
+            authInProgress = false;
+            if(resultCode == RESULT_OK) {
+                if(!mApiClient.isConnecting() && !mApiClient.isConnected()) {
+                    mApiClient.connect();
                 }
-            } else {
-                Log.e("GoogleFit", "requestCode NOT request_oauth");
+            } else if(resultCode == RESULT_CANCELED) {
+                Log.e("GoogleFit", "RESULT_CANCELED");
             }
-        }
-        @Override
-        public void onConnected (Bundle bundle){
-    }
-
-        @Override
-        public void onConnectionSuspended ( int i){
-    }
-
-        @Override
-        public void onConnectionFailed(ConnectionResult connectionResult){
-            if( !authInProgress) {
-                try {
-                    authInProgress = true;
-                    connectionResult.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
-                } catch(IntentSender.SendIntentException e) {
-
-                }
-            } else {
-                Log.e( "GoogleFit", "authInProgress");
-            }
-    }
-
-        @Override
-        public void onDataPoint (DataPoint dataPoint){
-
+        } else {
+            Log.e("GoogleFit", "requestCode NOT request_oauth");
         }
     }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult){
+        if( !authInProgress) {
+            try {
+                authInProgress = true;
+                connectionResult.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
+            } catch(IntentSender.SendIntentException e) {
+
+            }
+        } else {
+            Log.e( "GoogleFit", "authInProgress");
+        }
+    }
+
+    @Override
+
+    public void onConnected (Bundle bundle){
+    }
+
+    @Override
+    public void onConnectionSuspended ( int i){
+    }
+
+    @Override
+    public void onDataPoint (DataPoint dataPoint){
+
+    }
+}
