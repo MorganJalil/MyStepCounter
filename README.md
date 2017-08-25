@@ -4,6 +4,6 @@
 **Week 36:** - Having the UX/UI in place and hopefully completed.  
 **Week 37:** - Finishing touches of the app.  
   
-  **2017-08-21:** In planning stage of using google fit API's for making a stepcounter. Setting up Trello and a Timeplan.  
-  **2017-08-23:** The Sensor is working and its pretty accurate now with filtering and registering steps.
-
+**2017-08-21:** In planning stage of using google fit API's for making a stepcounter. Setting up Trello and a Timeplan.  
+**2017-08-23:** The Sensor is working and its pretty accurate now with filtering and registering steps.  
+**2017-08-24:** Made a mockup of the app. Early draft.  
