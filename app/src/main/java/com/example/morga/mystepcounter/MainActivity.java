@@ -1,336 +1,197 @@
 package com.example.morga.mystepcounter;
 
 
-
-import android.content.Intent;
-
-import android.content.IntentSender;
-
+import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
-
 import android.util.Log;
-
-import android.widget.Toast;
-
+import android.view.Menu;
+import android.view.MenuItem;
 
 
 import com.google.android.gms.common.ConnectionResult;
-
 import com.google.android.gms.common.Scopes;
-
 import com.google.android.gms.common.api.GoogleApiClient;
-
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-
 import com.google.android.gms.common.api.Scope;
-
 import com.google.android.gms.common.api.Status;
-
 import com.google.android.gms.fitness.Fitness;
-
-import com.google.android.gms.fitness.data.DataPoint;
-
-import com.google.android.gms.fitness.data.DataSource;
-
+import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
-
 import com.google.android.gms.fitness.data.Field;
-
-import com.google.android.gms.fitness.data.Value;
-
-import com.google.android.gms.fitness.request.DataSourcesRequest;
-
-import com.google.android.gms.fitness.request.OnDataPointListener;
-
-import com.google.android.gms.fitness.request.SensorRequest;
-
-import com.google.android.gms.fitness.result.DataSourcesResult;
-
-
-
+import com.google.android.gms.fitness.result.DailyTotalResult;
 import java.util.concurrent.TimeUnit;
 
+ /**
 
+     * This sample demonstrates combining the Recording API and History API of the Google Fit platform
+     * to record steps, and display the daily current step count. It also demonstrates how to
+     * authenticate a user with Google Play Services.
+     */
 
-public class MainActivity extends AppCompatActivity implements OnDataPointListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+    public class MainActivity extends AppCompatActivity {
+        public static final String TAG = "StepCounter";
+        private GoogleApiClient mClient = null;
 
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            // This method sets up our custom logger, which will print all log messages to the device
+            // screen, as well as to adb logcat.
+            /*initializeLogging();
+             */
 
-
-    private static final int REQUEST_OAUTH = 1;
-
-    private static final String AUTH_PENDING = "auth_state_pending";
-
-    private boolean authInProgress = false;
-
-    private GoogleApiClient mApiClient;
-
-
-
-    @Override
-
-    protected void onCreate (Bundle savedInstanceState){
-
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
-
-
-
-        if (savedInstanceState != null) {
-
-            authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
-
+            buildFitnessClient();
         }
 
-
-
-        mApiClient = new GoogleApiClient.Builder(this)
-
-                .addApi(Fitness.SENSORS_API)
-
-                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-
-                .addConnectionCallbacks(this)
-
-                .addOnConnectionFailedListener(this)
-
-                .build();
-
-    }
-
-
-
-    @Override
-
-    protected void onStart() {
-
-        super.onStart();
-
-        mApiClient.connect();
-
-    }
-
-
-
-
-
-    @Override
-
-    public void onConnectionFailed(ConnectionResult connectionResult){
-
-        if( !authInProgress) {
-
-            try {
-
-                authInProgress = true;
-
-                connectionResult.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
-
-            } catch(IntentSender.SendIntentException e) {
-
-
-
-            }
-
-        } else {
-
-            Log.e( "GoogleFit", "authInProgress");
-
-        }
-
-    }
-
-
-
-    @Override
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(requestCode == REQUEST_OAUTH) {
-
-            authInProgress = false;
-
-            if(resultCode == RESULT_OK) {
-
-                if(!mApiClient.isConnecting() && !mApiClient.isConnected()) {
-
-                    mApiClient.connect();
-
-                }
-
-            } else if(resultCode == RESULT_CANCELED) {
-
-                Log.e("GoogleFit", "RESULT_CANCELED");
-
-            }
-
-        } else {
-
-            Log.e("GoogleFit", "requestCode NOT request_oauth");
-
-        }
-
-    }
-
-
-
-    @Override
-
-    public void onConnected(Bundle bundle) {
-
-        DataSourcesRequest dataSourceRequest = new DataSourcesRequest.Builder()
-
-                .setDataTypes( DataType.TYPE_STEP_COUNT_CUMULATIVE )
-
-                .setDataSourceTypes( DataSource.TYPE_RAW )
-
-                .build();
-
-
-
-        ResultCallback<DataSourcesResult> dataSourcesResultCallback = new ResultCallback<DataSourcesResult>() {
-
-            @Override
-
-            public void onResult(DataSourcesResult dataSourcesResult) {
-
-                for( DataSource dataSource : dataSourcesResult.getDataSources() ) {
-
-                    if( DataType.TYPE_STEP_COUNT_CUMULATIVE.equals( dataSource.getDataType() ) ) {
-
-                        registerFitnessDataListener(dataSource, DataType.TYPE_STEP_COUNT_CUMULATIVE);
-
-                    }
-
-                }
-
-            }
-
-        };
-
-
-
-        Fitness.SensorsApi.findDataSources(mApiClient, dataSourceRequest)
-
-                .setResultCallback(dataSourcesResultCallback);
-
-    }
-
-
-
-    @Override
-
-    public void onConnectionSuspended ( int i){
-
-    }
-
-
-
-    @Override
-
-    public void onDataPoint (DataPoint dataPoint){
-
-        for(final Field field : dataPoint.getDataType().getFields()) {
-
-            final Value value = dataPoint.getValue(field);
-
-            runOnUiThread(new Runnable() {
-
-                @Override
-
-                public void run() {
-
-                    Toast.makeText(getApplicationContext(), "Field: " + field.getName() + " value: " + value, Toast.LENGTH_LONG).show();
-
-                }
-
-            });
-
-        }
-
-
-
-    }
-
-
-
-    private void registerFitnessDataListener(DataSource dataSource, DataType dataType) {
-
-        SensorRequest request = new SensorRequest.Builder()
-
-                .setDataSource( dataSource )
-
-                .setDataType( dataType )
-
-                .setSamplingRate( 3, TimeUnit.SECONDS )
-
-                .build();
-
-
-
-        Fitness.SensorsApi.add( mApiClient, request, this )
-
-                .setResultCallback(new ResultCallback<Status>() {
-
-                    @Override
-
-                    public void onResult(Status status) {
-
-                        if (status.isSuccess()) {
-
-                            Log.e( "GoogleFit", "SensorApi successfully added" );
-
+        /**
+         * Build a {@link GoogleApiClient} to authenticate the user and allow the application
+         * to connect to the Fitness APIs. The included scopes should match the scopes needed
+         * by your app (see the documentation for details).
+         * Use the {@link GoogleApiClient.OnConnectionFailedListener}
+         * to resolve authentication failures (for example, the user has not signed in
+         * before, or has multiple accounts and must specify which account to use).
+         */
+        private void buildFitnessClient() {
+            // Create the Google API Client
+            mClient = new GoogleApiClient.Builder(this)
+                    .addApi(Fitness.RECORDING_API)
+                    .addApi(Fitness.HISTORY_API)
+                    .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+                    .addConnectionCallbacks(
+                            new GoogleApiClient.ConnectionCallbacks() {
+
+                                @Override
+                                public void onConnected(Bundle bundle) {
+                                    Log.i(TAG, "Connected!!!");
+                                    // Now you can make calls to the Fitness APIs.  What to do?
+                                    // Subscribe to some data sources!
+                                    subscribe();
+                                }
+
+                                @Override
+                                public void onConnectionSuspended(int i) {
+                                    // If your connection to the sensor gets lost at some point,
+                                    // you'll be able to determine the reason and react to it here.
+                                    if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+                                        Log.w(TAG, "Connection lost.  Cause: Network Lost.");
+                                    } else if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+                                        Log.w(TAG, "Connection lost.  Reason: Service Disconnected");
+                                    }
+                                }
+                            }
+                    )
+                    .enableAutoManage(this, 0, new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(ConnectionResult result) {
+                            Log.w(TAG, "Google Play services connection failed. Cause: " +
+                                    result.toString());
+                            Snackbar.make(
+                                    MainActivity.this.findViewById(R.id.main_activity_view),
+                                    "Exception while connecting to Google Play services: " +
+                                            result.getErrorMessage(),
+                                    Snackbar.LENGTH_INDEFINITE).show();
                         }
+                    })
+                    .build();
+        }
 
-                    }
-
-                });
-
-    }
-
-
-
-    @Override
-
-    protected void onStop() {
-
-        super.onStop();
-
-
-
-        Fitness.SensorsApi.remove( mApiClient, this )
-
-                .setResultCallback(new ResultCallback<Status>() {
-
-                    @Override
-
-                    public void onResult(Status status) {
-
-                        if (status.isSuccess()) {
-
-                            mApiClient.disconnect();
-
+        /**
+         * Record step data by requesting a subscription to background step data.
+         */
+        public void subscribe() {
+            // To create a subscription, invoke the Recording API. As soon as the subscription is
+            // active, fitness data will start recording.
+            Fitness.RecordingApi.subscribe(mClient, DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                    .setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            if (status.isSuccess()) {
+                                if (status.getStatusCode()
+                                        == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
+                                    Log.i(TAG, "Existing subscription for activity detected.");
+                                } else {
+                                    Log.i(TAG, "Successfully subscribed!");
+                                }
+                            } else {
+                                Log.w(TAG, "There was a problem subscribing.");
+                            }
                         }
+                    });
+        }
 
-                    }
+        /**
+         * Read the current daily step total, computed from midnight of the current day
+         * on the device's current timezone.
+         */
 
-                });
+        private class VerifyDataTask extends AsyncTask<Void, Void, Void> {
+            protected Void doInBackground(Void... params) {
 
+                long total = 0;
+
+                PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.TYPE_STEP_COUNT_DELTA);
+                DailyTotalResult totalResult = result.await(30, TimeUnit.SECONDS);
+                if (totalResult.getStatus().isSuccess()) {
+                    DataSet totalSet = totalResult.getTotal();
+                    total = totalSet.isEmpty()
+                            ? 0
+                            : totalSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
+                } else {
+                    Log.w(TAG, "There was a problem getting the step count.");
+                }
+
+                Log.i(TAG, "Total steps: " + total);
+
+                return null;
+            }
+        }
+
+        private void readData() {
+            new VerifyDataTask().execute();
+        }
+
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            // Inflate the main; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.main, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == R.id.action_read_data) {
+                readData();
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+
+        /**
+         *  Initialize a custom log class that outputs both to in-app targets and logcat.
+         */
+       /* private void initializeLogging() {
+            // Wraps Android's native log framework.
+            LogWrapper logWrapper = new LogWrapper();
+            // Using Log, front-end to the logging chain, emulates android.util.log method signatures.
+            Log.setLogNode(logWrapper);
+            // Filter strips out everything except the message text.
+            MessageOnlyLogFilter msgFilter = new MessageOnlyLogFilter();
+            logWrapper.setNext(msgFilter);
+            // On screen logging via a customized TextView.
+            LogView logView = (LogView) findViewById(R.id.sample_logview);
+
+            // Fixing this lint error adds logic without benefit.
+            //noinspection AndroidLintDeprecation
+            logView.setTextAppearance(this, R.style.Log);
+            logView.setBackgroundColor(Color.WHITE);
+            msgFilter.setNext(logView);
+            Log.i(TAG, "Ready");
+        }
+        */
     }
-
-    @Override
-
-    protected void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-
-        outState.putBoolean(AUTH_PENDING, authInProgress);
-
-    }
-
-}
-
