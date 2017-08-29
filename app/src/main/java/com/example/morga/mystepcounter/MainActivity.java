@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 import com.google.android.gms.common.ConnectionResult;
@@ -68,6 +69,7 @@ import java.util.concurrent.TimeUnit;
                                 @Override
                                 public void onConnected(Bundle bundle) {
                                     Log.i(TAG, "Connected!!!");
+                                    Toast.makeText(getApplicationContext(), "Connected!",Toast.LENGTH_LONG).show();
                                     // Now you can make calls to the Fitness APIs.  What to do?
                                     // Subscribe to some data sources!
                                     subscribe();
@@ -79,8 +81,10 @@ import java.util.concurrent.TimeUnit;
                                     // you'll be able to determine the reason and react to it here.
                                     if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
                                         Log.w(TAG, "Connection lost.  Cause: Network Lost.");
+                                        Toast.makeText(getApplicationContext(), "Connection lost",Toast.LENGTH_LONG).show();
                                     } else if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
                                         Log.w(TAG, "Connection lost.  Reason: Service Disconnected");
+                                        Toast.makeText(getApplicationContext(), "Disconnected",Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
@@ -146,6 +150,7 @@ import java.util.concurrent.TimeUnit;
                 }
 
                 Log.i(TAG, "Total steps: " + total);
+                Toast.makeText(getApplicationContext(), "Connection lost" + total,Toast.LENGTH_LONG).show();
 
                 return null;
             }
