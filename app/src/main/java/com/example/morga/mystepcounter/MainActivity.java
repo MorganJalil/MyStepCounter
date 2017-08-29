@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -24,6 +26,8 @@ import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.result.DailyTotalResult;
+import com.google.android.gms.fitness.result.ListSubscriptionsResult;
+
 import java.util.concurrent.TimeUnit;
 
  /**
@@ -33,21 +37,32 @@ import java.util.concurrent.TimeUnit;
      * authenticate a user with Google Play Services.
      */
 
-    public class MainActivity extends AppCompatActivity {
-        public static final String TAG = "StepCounter";
-        private GoogleApiClient mClient = null;
+    public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+     public static final String TAG = "StepCounter";
+     private GoogleApiClient mClient = null;
+     private Button mCancelSubscriptionsBtn;
+     private Button mShowSubscriptionsBtn;
+
+
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            // This method sets up our custom logger, which will print all log messages to the device
-            // screen, as well as to adb logcat.
-            /*initializeLogging();
-             */
 
+            initViews();
             buildFitnessClient();
         }
+     private void initViews() {
+         mCancelSubscriptionsBtn = (Button) findViewById(R.id.btn_cancel_subscriptions);
+         mShowSubscriptionsBtn = (Button) findViewById(R.id.btn_show_subscriptions);
+
+         mShowSubscriptionsBtn.setOnClickListener(this);
+         mCancelSubscriptionsBtn.setOnClickListener(this);
+
+
+     }
 
         /**
          * Build a {@link GoogleApiClient} to authenticate the user and allow the application
@@ -69,7 +84,7 @@ import java.util.concurrent.TimeUnit;
                                 @Override
                                 public void onConnected(Bundle bundle) {
                                     Log.i(TAG, "Connected!!!");
-                                    Toast.makeText(getApplicationContext(), "Connected!",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Connected!",Toast.LENGTH_SHORT).show();
                                     // Now you can make calls to the Fitness APIs.  What to do?
                                     // Subscribe to some data sources!
                                     subscribe();
@@ -110,6 +125,7 @@ import java.util.concurrent.TimeUnit;
         public void subscribe() {
             // To create a subscription, invoke the Recording API. As soon as the subscription is
             // active, fitness data will start recording.
+
             Fitness.RecordingApi.subscribe(mClient, DataType.TYPE_STEP_COUNT_CUMULATIVE)
                     .setResultCallback(new ResultCallback<Status>() {
                         @Override
@@ -118,11 +134,14 @@ import java.util.concurrent.TimeUnit;
                                 if (status.getStatusCode()
                                         == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
                                     Log.i(TAG, "Existing subscription for activity detected.");
+                                    Toast.makeText(getApplicationContext(), "Existing subscription for activity detected.",Toast.LENGTH_LONG).show();
                                 } else {
                                     Log.i(TAG, "Successfully subscribed!");
+                                    Toast.makeText(getApplicationContext(), "Successfully subscribed!",Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 Log.w(TAG, "There was a problem subscribing.");
+                                Toast.makeText(getApplicationContext(), "There was a problem subscribing.",Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -139,7 +158,7 @@ import java.util.concurrent.TimeUnit;
                 long total = 0;
 
                 PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.TYPE_STEP_COUNT_DELTA);
-                DailyTotalResult totalResult = result.await(30, TimeUnit.SECONDS);
+                DailyTotalResult totalResult = result.await(5, TimeUnit.SECONDS);
                 if (totalResult.getStatus().isSuccess()) {
                     DataSet totalSet = totalResult.getTotal();
                     total = totalSet.isEmpty()
@@ -150,7 +169,11 @@ import java.util.concurrent.TimeUnit;
                 }
 
                 Log.i(TAG, "Total steps: " + total);
-                Toast.makeText(getApplicationContext(), "Connection lost" + total,Toast.LENGTH_LONG).show();
+                Snackbar.make(
+                        MainActivity.this.findViewById(R.id.main_activity_view),
+                        "Steps: " + total,
+                        Snackbar.LENGTH_SHORT).show();
+
 
                 return null;
             }
@@ -176,6 +199,44 @@ import java.util.concurrent.TimeUnit;
             }
             return super.onOptionsItemSelected(item);
         }
+
+     private void cancelSubscriptions() {
+             // To create a subscription, invoke the Recording API. As soon as the subscription is
+             // active, fitness data will start recording.
+
+             Fitness.RecordingApi.unsubscribe(mClient, DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                     .setResultCallback(new ResultCallback<Status>() {
+                         @Override
+                         public void onResult(Status status) {
+                             if (status.isSuccess()) {
+                                 if (status.getStatusCode()
+                                         == FitnessStatusCodes.SUCCESS_LISTENER_NOT_REGISTERED_FOR_FITNESS_DATA_UPDATES) {
+                                     Log.i(TAG, "Already unsubscribed.");
+                                     Toast.makeText(getApplicationContext(), "Already unsubscribed.",Toast.LENGTH_LONG).show();
+                                 } else {
+                                     Log.i(TAG, "Successfully unsubscribed!");
+                                     Toast.makeText(getApplicationContext(), "Successfully unsubscribed!",Toast.LENGTH_LONG).show();
+                                 }
+                             } else {
+                                 Log.w(TAG, "There was a problem unsubscribing.");
+                                 Toast.makeText(getApplicationContext(), "There was a problem unsubscribing.",Toast.LENGTH_LONG).show();
+                             }
+                         }
+                     });
+         }
+
+     public void onClick(View v) {
+         switch(v.getId()) {
+             case R.id.btn_cancel_subscriptions: {
+                 cancelSubscriptions();
+                 break;
+             }
+             case R.id.btn_show_subscriptions: {
+                 subscribe();
+                 break;
+             }
+         }
+     }
 
         /**
          *  Initialize a custom log class that outputs both to in-app targets and logcat.
