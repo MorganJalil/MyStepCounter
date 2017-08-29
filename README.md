@@ -8,3 +8,4 @@
 **2017-08-23:** The Sensor is working and its pretty accurate now with filtering and registering steps.  
 **2017-08-24:** Made a mockup of the app. Early draft.  
 **2017-08-28:** Research how to implement API RECORDING and HISTORY with SENSOR.
+**2017-08-29:** Deleted SENSOR API and implemented RECORDING API and HISTORY API. the skeleton code is done!
