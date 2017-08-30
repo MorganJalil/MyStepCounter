@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
  /**
 
-     * This sample demonstrates combining the Recording API and History API of the Google Fit platform
+     * Combine Recording API and History API of the Google Fit platform
      * to record steps, and display the daily current step count. It also demonstrates how to
      * authenticate a user with Google Play Services.
      */
@@ -66,9 +66,7 @@ import java.util.concurrent.TimeUnit;
 
         /**
          * Build a {@link GoogleApiClient} to authenticate the user and allow the application
-         * to connect to the Fitness APIs. The included scopes should match the scopes needed
-         * by your app (see the documentation for details).
-         * Use the {@link GoogleApiClient.OnConnectionFailedListener}
+         * to connect to the Fitness APIs.
          * to resolve authentication failures (for example, the user has not signed in
          * before, or has multiple accounts and must specify which account to use).
          */
@@ -237,27 +235,4 @@ import java.util.concurrent.TimeUnit;
              }
          }
      }
-
-        /**
-         *  Initialize a custom log class that outputs both to in-app targets and logcat.
-         */
-       /* private void initializeLogging() {
-            // Wraps Android's native log framework.
-            LogWrapper logWrapper = new LogWrapper();
-            // Using Log, front-end to the logging chain, emulates android.util.log method signatures.
-            Log.setLogNode(logWrapper);
-            // Filter strips out everything except the message text.
-            MessageOnlyLogFilter msgFilter = new MessageOnlyLogFilter();
-            logWrapper.setNext(msgFilter);
-            // On screen logging via a customized TextView.
-            LogView logView = (LogView) findViewById(R.id.sample_logview);
-
-            // Fixing this lint error adds logic without benefit.
-            //noinspection AndroidLintDeprecation
-            logView.setTextAppearance(this, R.style.Log);
-            logView.setBackgroundColor(Color.WHITE);
-            msgFilter.setNext(logView);
-            Log.i(TAG, "Ready");
-        }
-        */
-    }
+ }
