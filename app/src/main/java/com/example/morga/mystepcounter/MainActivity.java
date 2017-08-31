@@ -1,10 +1,19 @@
 package com.example.morga.mystepcounter;
 
 
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +37,8 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.result.DailyTotalResult;
 import com.google.android.gms.fitness.result.ListSubscriptionsResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
  /**
@@ -37,12 +48,16 @@ import java.util.concurrent.TimeUnit;
      * authenticate a user with Google Play Services.
      */
 
-    public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    public class MainActivity extends AppCompatActivity {
 
      public static final String TAG = "StepCounter";
      private GoogleApiClient mClient = null;
      private Button mCancelSubscriptionsBtn;
      private Button mShowSubscriptionsBtn;
+
+     private Toolbar toolbar;
+     private TabLayout tabLayout;
+     private ViewPager viewPager;
 
 
 
@@ -51,18 +66,69 @@ import java.util.concurrent.TimeUnit;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
+
             initViews();
+
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            viewPager = (ViewPager) findViewById(R.id.viewpager);
+            setupViewPager(viewPager);
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(viewPager);
+
+
+
+
             buildFitnessClient();
         }
-     private void initViews() {
-         mCancelSubscriptionsBtn = (Button) findViewById(R.id.btn_cancel_subscriptions);
-         mShowSubscriptionsBtn = (Button) findViewById(R.id.btn_show_subscriptions);
 
-         mShowSubscriptionsBtn.setOnClickListener(this);
-         mCancelSubscriptionsBtn.setOnClickListener(this);
+     private void initViews() {
+
+
+
+
 
 
      }
+
+     private void setupViewPager(ViewPager viewPager) {
+            ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+            adapter.addFragment(new OneFragment(), "DAILY");
+            adapter.addFragment(new TwoFragment(), "WEEK");
+            adapter.addFragment(new ThreeFragment(), "SETUP");
+            viewPager.setAdapter(adapter);
+        }
+
+        class ViewPagerAdapter extends FragmentPagerAdapter {
+            private final List<Fragment> mFragmentList = new ArrayList<>();
+            private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+        }
+
 
         /**
          * Build a {@link GoogleApiClient} to authenticate the user and allow the application
@@ -195,6 +261,14 @@ import java.util.concurrent.TimeUnit;
                 readData();
                 return true;
             }
+            if (id == R.id.start) {
+                subscribe();
+                return true;
+            }
+            if (id == R.id.pause) {
+                cancelSubscriptions();
+                return true;
+            }
             return super.onOptionsItemSelected(item);
         }
 
@@ -218,21 +292,11 @@ import java.util.concurrent.TimeUnit;
                              } else {
                                  Log.w(TAG, "There was a problem unsubscribing.");
                                  Toast.makeText(getApplicationContext(), "There was a problem unsubscribing.",Toast.LENGTH_LONG).show();
+                                 setContentView(R.layout.fragment_one);
                              }
                          }
                      });
          }
 
-     public void onClick(View v) {
-         switch(v.getId()) {
-             case R.id.btn_cancel_subscriptions: {
-                 cancelSubscriptions();
-                 break;
-             }
-             case R.id.btn_show_subscriptions: {
-                 subscribe();
-                 break;
-             }
-         }
-     }
+
  }
