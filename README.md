@@ -11,3 +11,5 @@
 **2017-08-29:** Deleted SENSOR API and implemented RECORDING API and HISTORY API. The skeleton code is done!  
 **2017-08-30:** Research about charts and diagram and swipe menu.  
 **2017-08-31:** Implemented Basic Layout with tab and swipes.  
+**2017-09-01:** Reseach of diagrams and donut graphs.  
+**2017-09-04:** History API can now fetch last weeks data in buckets.    
