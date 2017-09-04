@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity"
     app:theme="@style/MyAppTheme.Base">
+
     <item android:id="@+id/start"
         android:title="Connect"
         android:orderInCategory="100"
@@ -12,14 +13,20 @@
 
     <item android:id="@+id/pause"
         android:title="Pause"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom"
+        android:orderInCategory="2"
+        app:showAsAction="always"
         android:icon="@drawable/ic_pause_white_24dp"/>
 
     <item android:id="@+id/action_read_data"
         android:title="Read step data"
         android:orderInCategory="1"
         app:showAsAction="always"
+        android:icon="@drawable/ic_directions_walk_white_24dp"/>
+
+    <item android:id="@+id/week"
+        android:title="Read step data"
+        android:orderInCategory="3"
+        app:showAsAction="never"
         android:icon="@drawable/ic_directions_walk_white_24dp"/>
 
 
