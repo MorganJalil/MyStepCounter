@@ -229,18 +229,13 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Log.w(TAG, "There was a problem getting the step count.");
             }
-
             Log.i(TAG, "Total steps: " + total);
             Snackbar.make(
                     MainActivity.this.findViewById(R.id.main_activity_view),
                     "Steps: " + total,
                     Snackbar.LENGTH_SHORT).show();
-
-
             return null;
         }
-
-
     }
 
     private void showDataSet(DataSet dataSet) {
@@ -263,9 +258,11 @@ public class MainActivity extends AppCompatActivity {
             for (Field field : dp.getDataType().getFields()) {
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
-
+                Snackbar.make(
+                        MainActivity.this.findViewById(R.id.main_activity_view),
+                        String.format("week " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS))),
+                        Snackbar.LENGTH_SHORT).show();
             }
-
 
         }
 
