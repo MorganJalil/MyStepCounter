@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
                         " Value: " + dp.getValue(field));
                 Snackbar.make(
                         MainActivity.this.findViewById(R.id.main_activity_view),
-                        String.format("week " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS))),
+                        String.format(dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS))),
                         Snackbar.LENGTH_SHORT).show();
             }
 
