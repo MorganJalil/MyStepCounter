@@ -241,10 +241,7 @@ public class MainActivity extends AppCompatActivity {
     private void showDataSet(DataSet dataSet) {
 
         Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
-        Snackbar.make(
-                MainActivity.this.findViewById(R.id.main_activity_view),
-                "week ",
-                Snackbar.LENGTH_SHORT).show();
+
 
         DateFormat dateFormat = DateFormat.getDateInstance();
         DateFormat timeFormat = DateFormat.getTimeInstance();
@@ -258,10 +255,10 @@ public class MainActivity extends AppCompatActivity {
             for (Field field : dp.getDataType().getFields()) {
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
-                Snackbar.make(
-                        MainActivity.this.findViewById(R.id.main_activity_view),
-                        String.format(dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS))),
-                        Snackbar.LENGTH_SHORT).show();
+                //Snackbar.make(
+                  //      MainActivity.this.findViewById(R.id.main_activity_view),
+                    //    String.format(dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS))),
+                      //  Snackbar.LENGTH_SHORT).show();
             }
 
         }
@@ -279,6 +276,10 @@ public class MainActivity extends AppCompatActivity {
         java.text.DateFormat dateFormat = DateFormat.getDateInstance();
         Log.e("History", "Range Start: " + dateFormat.format(startTime));
         Log.e("History", "Range End: " + dateFormat.format(endTime));
+        Snackbar.make(
+                MainActivity.this.findViewById(R.id.main_activity_view),
+                String.format(dateFormat.format(startTime) + " " + dateFormat.format(endTime)),
+                Snackbar.LENGTH_SHORT).show();
 
         //Check how many steps were walked and recorded in the last 7 days
 
