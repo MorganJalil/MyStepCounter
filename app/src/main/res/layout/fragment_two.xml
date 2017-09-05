@@ -4,8 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.morga.mystepcounter.TwoFragment">
+    tools:context="com.example.morga.mystepcounter.TwoFragment"
+    android:id="@+id/fragment_two">
 
+    <TextView
+        android:id="@+id/start_date"
+        android:textColor="#000000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:text=""/>
+
+    <TextView
+        android:id="@+id/end"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
         android:layout_width="wrap_content"
