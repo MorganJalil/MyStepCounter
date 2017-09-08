@@ -4,6 +4,7 @@ package com.example.morga.mystepcounter;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,8 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,9 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private Button mCancelSubscriptionsBtn;
     private Button mShowSubscriptionsBtn;
 
-    private Toolbar toolbar;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+
+
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private ViewPager mViewPager;
 
 
     @Override
@@ -72,60 +78,126 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
-
-
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
 
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
         buildFitnessClient();
         readWeek();
-
-
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new OneFragment(), "DAILY");
-        adapter.addFragment(new TwoFragment(), "WEEK");
-        adapter.addFragment(new ThreeFragment(), "SETUP");
-        viewPager.setAdapter(adapter);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the main; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_read_data) {
+            readData();
+            return true;
+        }
+        if (id == R.id.start) {
+            subscribe();
+            return true;
+        }
+        if (id == R.id.pause) {
+            cancelSubscriptions();
+            return true;
+        }
+        if (id == R.id.week) {
+            readWeek();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public PlaceholderFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            return rootView;
+        }
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
-            return mFragmentList.get(position);
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
         public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
+            // Show 3 total pages.
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+            switch (position) {
+                case 0:
+                    return "SECTION 1";
+                case 1:
+                    return "SECTION 2";
+                case 2:
+                    return "SECTION 3";
+            }
+            return null;
         }
     }
+
 
 
     /**
@@ -172,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.w(TAG, "Google Play services connection failed. Cause: " +
                                 result.toString());
                         Snackbar.make(
-                                MainActivity.this.findViewById(R.id.main_activity_view),
+                                MainActivity.this.findViewById(R.id.main_content),
                                 "Exception while connecting to Google Play services: " +
                                         result.getErrorMessage(),
                                 Snackbar.LENGTH_INDEFINITE).show();
@@ -231,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.i(TAG, "Total steps: " + total);
             Snackbar.make(
-                    MainActivity.this.findViewById(R.id.main_activity_view),
+                    MainActivity.this.findViewById(R.id.main_content),
                     "Steps: " + total,
                     Snackbar.LENGTH_SHORT).show();
             return null;
@@ -277,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e("History", "Range Start: " + dateFormat.format(startTime));
         Log.e("History", "Range End: " + dateFormat.format(endTime));
         Snackbar.make(
-                MainActivity.this.findViewById(R.id.main_activity_view),
+                MainActivity.this.findViewById(R.id.main_content),
                 String.format(dateFormat.format(startTime) + " " + dateFormat.format(endTime)),
                 Snackbar.LENGTH_SHORT).show();
 
@@ -323,34 +395,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the main; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_read_data) {
-            readData();
-            return true;
-        }
-        if (id == R.id.start) {
-            subscribe();
-            return true;
-        }
-        if (id == R.id.pause) {
-            cancelSubscriptions();
-            return true;
-        }
-        if (id == R.id.week) {
-            readWeek();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     private void cancelSubscriptions() {
         // To create a subscription, invoke the Recording API. As soon as the subscription is
@@ -372,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Log.w(TAG, "There was a problem unsubscribing.");
                             Toast.makeText(getApplicationContext(), "There was a problem unsubscribing.", Toast.LENGTH_LONG).show();
-                            setContentView(R.layout.fragment_one);
+                            setContentView(R.layout.activity_main);
                         }
                     }
                 });
