@@ -2,6 +2,7 @@ package com.example.morga.mystepcounter;
 
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
     private ViewPager mViewPager;
 
 
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -185,11 +186,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "TODAY";
                 case 1:
-                    return "SECTION 2";
+                    return "LAST WEEK";
                 case 2:
-                    return "SECTION 3";
+                    return "SETTINGS";
             }
             return null;
         }
