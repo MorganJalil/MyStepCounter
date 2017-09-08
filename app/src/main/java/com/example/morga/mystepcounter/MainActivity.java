@@ -62,13 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "StepCounter";
     private GoogleApiClient mClient = null;
-    private Button mCancelSubscriptionsBtn;
-    private Button mShowSubscriptionsBtn;
+
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-
-    private TabLayout tabLayout;
     private ViewPager mViewPager;
 
 
