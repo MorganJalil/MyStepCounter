@@ -14,3 +14,4 @@
 **2017-09-01:** Research of diagrams and donut graphs.  
 **2017-09-04:** History API can now fetch last weeks data in buckets.  
 **2017-09-05:** Testing and reading about datasets with diagrams and donut graph.  
+**2017-09-08:** Totally remade Fragments with tabs and swipes to a much simpler one.    
