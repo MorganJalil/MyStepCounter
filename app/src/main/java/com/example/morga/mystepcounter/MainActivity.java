@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
     private ViewPager mViewPager;
 
 
@@ -185,11 +184,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "TODAY";
                 case 1:
-                    return "SECTION 2";
+                    return "LAST WEEK";
                 case 2:
-                    return "SECTION 3";
+                    return "SETTINGS";
             }
             return null;
         }
