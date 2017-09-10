@@ -1,5 +1,6 @@
 package com.example.morga.mystepcounter;
-
+import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class TabFragment1 extends Fragment implements View.OnClickListener {
         btnFtoF = (Button) view.findViewById(R.id.button2);
         btnFtoA.setOnClickListener(this);
         btnFtoF.setOnClickListener(this);
+        Bundle extras = getActivity().getIntent().getExtras();
 
         return view;
 

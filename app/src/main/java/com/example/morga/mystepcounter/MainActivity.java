@@ -2,12 +2,14 @@ package com.example.morga.mystepcounter;
 
 
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,8 +46,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
+
+import static com.example.morga.mystepcounter.R.id.myTextView;
+import static com.example.morga.mystepcounter.R.id.textView;
 
 /**
  * Combine Recording API and History API of the Google Fit platform
@@ -94,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         });
         buildFitnessClient();
         readWeek();
+
     }
     public interface SelectedBundle {
         void onBundleSelect(Bundle bundle);
@@ -259,10 +269,23 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
      * on the device's current timezone.
      */
 
-    private class VerifyDataTask extends AsyncTask<Void, Void, Void> {
-        protected Void doInBackground(Void... params) {
+    private class VerifyDataTask extends AsyncTask<Void, Void, Long> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+        TextView steps = (TextView) findViewById(R.id.myTextView);
+
+            protected Long doInBackground(Void... params) {
 
             long total = 0;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        steps.setText("");
+    }
+});
 
             PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.TYPE_STEP_COUNT_DELTA);
             DailyTotalResult totalResult = result.await(5, TimeUnit.SECONDS);
@@ -275,11 +298,62 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 Log.w(TAG, "There was a problem getting the step count.");
             }
             Log.i(TAG, "Total steps: " + total);
+            //Snackbar.make(
+             //       MainActivity.this.findViewById(R.id.main_content),
+               //     "Steps: " + total,
+                 //   Snackbar.LENGTH_SHORT).show();
+
+
+
+            return total;
+
+
+
+        }
+
+
+        @Override
+        protected void onPostExecute(Long total) {
+
+
+
+
+            TabFragment1 tabFrag1 = (TabFragment1)getSupportFragmentManager()
+                    .findFragmentById(R.id.tab1);
+
+            if (tabFrag1 != null) {
+                tabFrag1.onRefresh();
+
+            } else {
+                TabFragment1 newTabFrag1 = new TabFragment1();
+                Bundle args = new Bundle();
+                args.putLong("steps", total);
+                newTabFrag1.setArguments(args);
+
+                TextView steps = (TextView) findViewById(R.id.myTextView);
+                steps.setText(String.valueOf(total));
+
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.tab1, newTabFrag1);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+
+            //Timer myTimer = new Timer();
+            //myTimer.schedule(new TimerTask() {
+              //  @Override
+                //public void run() {
+                 //   readData();
+                //}
+            //}, 10000);
+
+
+
             Snackbar.make(
                     MainActivity.this.findViewById(R.id.main_content),
                     "Steps: " + total,
                     Snackbar.LENGTH_SHORT).show();
-            return null;
 
         }
 
