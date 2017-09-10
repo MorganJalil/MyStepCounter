@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
     private GoogleApiClient mClient = null;
 
 
+    private TextView steps;
     private PagerAdapter adapter;
     private TabLayout tabLayout;
     SelectedBundle selectedBundle;
@@ -270,22 +271,26 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
      */
 
     private class VerifyDataTask extends AsyncTask<Void, Void, Long> {
-
+        TextView steps = (TextView) findViewById(R.id.myTextView);
         @Override
         protected void onPreExecute() {
 
+            steps.setText("");
         }
-        TextView steps = (TextView) findViewById(R.id.myTextView);
+
 
             protected Long doInBackground(Void... params) {
 
-            long total = 0;
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         steps.setText("");
+
     }
 });
+
+                long total = 0;
 
             PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.TYPE_STEP_COUNT_DELTA);
             DailyTotalResult totalResult = result.await(5, TimeUnit.SECONDS);
@@ -331,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 newTabFrag1.setArguments(args);
 
                 TextView steps = (TextView) findViewById(R.id.myTextView);
-                steps.setText(String.valueOf(total));
+                //steps.setText(String.valueOf(total));
 
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -354,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                     MainActivity.this.findViewById(R.id.main_content),
                     "Steps: " + total,
                     Snackbar.LENGTH_SHORT).show();
+            steps.setText(String.valueOf(total));
 
         }
 
