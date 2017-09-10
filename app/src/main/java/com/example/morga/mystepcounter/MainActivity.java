@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
     private PagerAdapter adapter;
     private TabLayout tabLayout;
-
+    SelectedBundle selectedBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         buildFitnessClient();
         readWeek();
     }
+    public interface SelectedBundle {
+        void onBundleSelect(Bundle bundle);
+    }
+    public void setOnBundleSelected(SelectedBundle selectedBundle) {
+        this.selectedBundle = selectedBundle;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,6 +113,18 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_read_data) {
+            int position = tabLayout.getSelectedTabPosition();
+            Fragment fragment = adapter.getFragment(tabLayout.getSelectedTabPosition());
+            if (fragment !=null) {
+                switch (position) {
+                    case 0:
+                        ((TabFragment1) fragment).onRefresh();
+                        break;
+                    case 2:
+                        ((TabFragment2)fragment).onRefresh();
+                        break;
+                }
+            }
             readData();
             return true;
         }
@@ -261,7 +280,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                     "Steps: " + total,
                     Snackbar.LENGTH_SHORT).show();
             return null;
+
         }
+
     }
 
     private void showDataSet(DataSet dataSet) {

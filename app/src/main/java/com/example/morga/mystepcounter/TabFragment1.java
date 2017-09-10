@@ -26,15 +26,10 @@ public class TabFragment1 extends Fragment implements View.OnClickListener {
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.tab_fragment_1, container, false);
-
         btnFtoA = (Button) view.findViewById(R.id.button);
-
         btnFtoF = (Button) view.findViewById(R.id.button2);
-
         btnFtoA.setOnClickListener(this);
-
         btnFtoF.setOnClickListener(this);
 
         return view;
