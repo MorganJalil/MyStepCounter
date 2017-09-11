@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -52,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 
 import static com.example.morga.mystepcounter.R.id.myTextView;
+import static com.example.morga.mystepcounter.R.id.sevenDays;
 import static com.example.morga.mystepcounter.R.id.textView;
 
 /**
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
     private GoogleApiClient mClient = null;
 
 
-    private TextView steps;
+
     private PagerAdapter adapter;
     private TabLayout tabLayout;
     SelectedBundle selectedBundle;
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         tabLayout.setupWithViewPager(viewPager);
 
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +105,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                         .setAction("Action", null).show();
             }
         });
+
+        TabFragment2 tabFragment2 = new TabFragment2();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.container, tabFragment2);
+        transaction.commit();
+
+
         buildFitnessClient();
         readWeek();
 
@@ -196,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 .addApi(Fitness.RECORDING_API)
                 .addApi(Fitness.HISTORY_API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
 
@@ -275,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         @Override
         protected void onPreExecute() {
 
-            steps.setText("");
+            //steps.setText("");
         }
 
 
@@ -312,20 +323,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
             return total;
 
-
-
         }
-
 
         @Override
         protected void onPostExecute(Long total) {
-
-
-
-
-            TabFragment1 tabFrag1 = (TabFragment1)getSupportFragmentManager()
-                    .findFragmentById(R.id.tab1);
-
+            TabFragment1 tabFrag1 = (TabFragment1)getSupportFragmentManager().findFragmentById(R.id.tab1);
             if (tabFrag1 != null) {
                 tabFrag1.onRefresh();
 
@@ -334,10 +336,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 Bundle args = new Bundle();
                 args.putLong("steps", total);
                 newTabFrag1.setArguments(args);
-
-                TextView steps = (TextView) findViewById(R.id.myTextView);
-                //steps.setText(String.valueOf(total));
-
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.tab1, newTabFrag1);
@@ -353,8 +351,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 //}
             //}, 10000);
 
-
-
             Snackbar.make(
                     MainActivity.this.findViewById(R.id.main_content),
                     "Steps: " + total,
@@ -362,17 +358,14 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
             steps.setText(String.valueOf(total));
 
         }
-
     }
 
     private void showDataSet(DataSet dataSet) {
 
         Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
 
-
         DateFormat dateFormat = DateFormat.getDateInstance();
         DateFormat timeFormat = DateFormat.getTimeInstance();
-
 
         for (DataPoint dp : dataSet.getDataPoints()) {
             Log.e("History", "Data point:");
@@ -403,6 +396,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         java.text.DateFormat dateFormat = DateFormat.getDateInstance();
         Log.e("History", "Range Start: " + dateFormat.format(startTime));
         Log.e("History", "Range End: " + dateFormat.format(endTime));
+
+
+
+//daysSeven.setText(String.valueOf(startDate + endDate));
+
         Snackbar.make(
                 MainActivity.this.findViewById(R.id.main_content),
                 String.format(dateFormat.format(startTime) + " " + dateFormat.format(endTime)),
@@ -439,6 +437,18 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
     return readRequest;
     }
 
+    private class ViewWeekStepCountTask extends AsyncTask<Void, Void, String> {
+
+        protected String doInBackground(Void... params) {
+            TextView daysSeven = (TextView) findViewById(R.id.sevenDays);
+
+
+            displayLastWeeksData();
+
+
+            return null;
+        }
+    }
 
     private void readData() {
         new VerifyDataTask().execute();
@@ -477,13 +487,4 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 });
     }
 
-
-    private class ViewWeekStepCountTask extends AsyncTask<Void, Void, Void> {
-        protected Void doInBackground(Void... params) {
-            displayLastWeeksData();
-
-            return null;
-        }
-
-    }
 }
