@@ -37,6 +37,7 @@ import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DailyTotalResult;
 import com.google.android.gms.fitness.result.DataReadResult;
@@ -52,6 +53,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 
+import static com.example.morga.mystepcounter.R.id.calories;
 import static com.example.morga.mystepcounter.R.id.myTextView;
 import static com.example.morga.mystepcounter.R.id.sevenDays;
 import static com.example.morga.mystepcounter.R.id.textView;
@@ -66,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
     public static final String TAG = "StepCounter";
     private GoogleApiClient mClient = null;
-
 
 
     private PagerAdapter adapter;
@@ -91,16 +92,16 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.container);
-        adapter = new PagerAdapter(getSupportFragmentManager(),tabs);
+        adapter = new PagerAdapter(getSupportFragmentManager(), tabs);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                readCalories();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -116,9 +117,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         readWeek();
 
     }
+
     public interface SelectedBundle {
         void onBundleSelect(Bundle bundle);
     }
+
     public void setOnBundleSelected(SelectedBundle selectedBundle) {
         this.selectedBundle = selectedBundle;
     }
@@ -136,13 +139,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         if (id == R.id.action_read_data) {
             int position = tabLayout.getSelectedTabPosition();
             Fragment fragment = adapter.getFragment(tabLayout.getSelectedTabPosition());
-            if (fragment !=null) {
+            if (fragment != null) {
                 switch (position) {
                     case 0:
                         ((TabFragment1) fragment).onRefresh();
                         break;
                     case 2:
-                        ((TabFragment2)fragment).onRefresh();
+                        ((TabFragment2) fragment).onRefresh();
                         break;
                 }
             }
@@ -172,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 
     }
-
 
 
     @Override
@@ -207,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 .addApi(Fitness.HISTORY_API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addScope(new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
 
@@ -283,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
     private class VerifyDataTask extends AsyncTask<Void, Void, Long> {
         TextView steps = (TextView) findViewById(R.id.myTextView);
+
         @Override
         protected void onPreExecute() {
 
@@ -290,18 +294,18 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         }
 
 
-            protected Long doInBackground(Void... params) {
+        protected Long doInBackground(Void... params) {
 
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        steps.setText("");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    steps.setText("");
 
-    }
-});
+                }
+            });
 
-                long total = 0;
+            long total = 0;
 
             PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mClient, DataType.TYPE_STEP_COUNT_DELTA);
             DailyTotalResult totalResult = result.await(5, TimeUnit.SECONDS);
@@ -315,10 +319,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
             }
             Log.i(TAG, "Total steps: " + total);
             //Snackbar.make(
-             //       MainActivity.this.findViewById(R.id.main_content),
-               //     "Steps: " + total,
-                 //   Snackbar.LENGTH_SHORT).show();
-
+            //       MainActivity.this.findViewById(R.id.main_content),
+            //     "Steps: " + total,
+            //   Snackbar.LENGTH_SHORT).show();
 
 
             return total;
@@ -327,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
         @Override
         protected void onPostExecute(Long total) {
-            TabFragment1 tabFrag1 = (TabFragment1)getSupportFragmentManager().findFragmentById(R.id.tab1);
+            TabFragment1 tabFrag1 = (TabFragment1) getSupportFragmentManager().findFragmentById(R.id.tab1);
             if (tabFrag1 != null) {
                 tabFrag1.onRefresh();
 
@@ -345,10 +348,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
             //Timer myTimer = new Timer();
             //myTimer.schedule(new TimerTask() {
-              //  @Override
-                //public void run() {
-                 //   readData();
-                //}
+            //  @Override
+            //public void run() {
+            //   readData();
+            //}
             //}, 10000);
 
             Snackbar.make(
@@ -376,9 +379,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
                 //Snackbar.make(
-                  //      MainActivity.this.findViewById(R.id.main_activity_view),
-                    //    String.format(dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS))),
-                      //  Snackbar.LENGTH_SHORT).show();
+                //      MainActivity.this.findViewById(R.id.main_activity_view),
+                //    String.format(dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS))),
+                //  Snackbar.LENGTH_SHORT).show();
             }
 
         }
@@ -396,7 +399,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         java.text.DateFormat dateFormat = DateFormat.getDateInstance();
         Log.e("History", "Range Start: " + dateFormat.format(startTime));
         Log.e("History", "Range End: " + dateFormat.format(endTime));
-
 
 
 //daysSeven.setText(String.valueOf(startDate + endDate));
@@ -434,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
             }
         }
-    return readRequest;
+        return readRequest;
     }
 
     private class ViewWeekStepCountTask extends AsyncTask<Void, Void, String> {
@@ -448,6 +450,69 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
             return null;
         }
+    }
+
+    private DataReadRequest GetCaloriesDataForToday() {
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        long startTime = cal.getTimeInMillis();
+
+        final DataReadRequest readRequest = new DataReadRequest.Builder()
+                .read(DataType.TYPE_CALORIES_EXPENDED)
+                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                .build();
+
+        DataReadResult dataReadResult =
+                Fitness.HistoryApi.readData(mClient, readRequest).await(0, TimeUnit.MILLISECONDS);
+
+        DataSet dailyTotalCalories = dataReadResult.getDataSet(DataType.TYPE_CALORIES_EXPENDED);
+
+        int totalCalories = 0;
+
+        for (DataPoint dp : dailyTotalCalories.getDataPoints()) {
+            for (Field field : dp.getDataType().getFields()) {
+                int calories = dp.getValue(field).asInt();
+
+                totalCalories += calories;
+
+
+            }
+        }
+        return readRequest;
+    }
+
+    private class ViewDailyCalories extends AsyncTask<Void, Void, String> {
+        TextView calories = (TextView) findViewById(R.id.calories);
+
+        protected String doInBackground(Void... params) {
+
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    calories.setText("3");
+                    Log.e("Calories", "Calories: " + GetCaloriesDataForToday());
+
+                }
+            });
+
+
+            GetCaloriesDataForToday();
+
+
+            return null;
+        }
+    }
+
+    private void readCalories() {
+
+        new ViewDailyCalories().execute();
+
     }
 
     private void readData() {
@@ -486,5 +551,4 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                     }
                 });
     }
-
 }
