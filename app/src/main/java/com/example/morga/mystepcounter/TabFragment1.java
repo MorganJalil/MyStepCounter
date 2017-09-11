@@ -4,11 +4,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.txusballesteros.widgets.FitChart;
 
 /**
  * Created by Morga on 2017-09-10.
@@ -32,8 +35,11 @@ public class TabFragment1 extends Fragment implements View.OnClickListener {
         btnFtoF = (Button) view.findViewById(R.id.button2);
         btnFtoA.setOnClickListener(this);
         btnFtoF.setOnClickListener(this);
-        Bundle extras = getActivity().getIntent().getExtras();
 
+
+
+
+        Log.i("DEBUG", "" + getArguments());
         return view;
 
     }

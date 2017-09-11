@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tab1"
     android:layout_width="match_parent"
 
     android:layout_height="match_parent"
 
     android:orientation="vertical">
-
-
-
+<FrameLayout
+    android:layout_centerVertical="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.txusballesteros.widgets.FitChart
+        android:id="@+id/fitChart"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_centerInParent="true"
+        app:strokeSize="10dp"
+        app:valueStrokeColor="#ff0000"
+        app:backStrokeColor="#00ff00"
+        app:animationMode="overdraw"/>
+</FrameLayout>
     <TextView
 
         android:id="@+id/textView"
