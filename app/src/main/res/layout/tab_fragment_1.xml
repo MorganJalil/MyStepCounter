@@ -36,10 +36,17 @@
 
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
+    <TextView
+        android:id="@+id/calories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myTextView"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 <TextView
 
     android:id="@+id/myTextView"
-
     android:layout_centerHorizontal="true"
     android:padding="10dp"
     android:layout_width="wrap_content"

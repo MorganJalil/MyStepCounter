@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readCalories();
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                                 // Now you can make calls to the Fitness APIs.  What to do?
                                 // Subscribe to some data sources!
                                 subscribe();
+                                readData();
                             }
 
                             @Override
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
      * on the device's current timezone.
      */
 
-    private class VerifyDataTask extends AsyncTask<Void, Void, Long> {
+    private class DailySteps extends AsyncTask<Void, Void, Long> {
         TextView steps = (TextView) findViewById(R.id.myTextView);
 
         @Override
@@ -345,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
-
+            steps.setText(String.valueOf(total));
             //Timer myTimer = new Timer();
             //myTimer.schedule(new TimerTask() {
             //  @Override
@@ -354,11 +355,9 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
             //}
             //}, 10000);
 
-            Snackbar.make(
-                    MainActivity.this.findViewById(R.id.main_content),
-                    "Steps: " + total,
-                    Snackbar.LENGTH_SHORT).show();
-            steps.setText(String.valueOf(total));
+            //Snackbar.make(
+              //      MainActivity.this.findViewById(R.id.main_content),
+                ////  Snackbar.LENGTH_SHORT).show();
 
         }
     }
@@ -452,71 +451,10 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         }
     }
 
-    private DataReadRequest GetCaloriesDataForToday() {
-        Calendar cal = Calendar.getInstance();
-        Date now = new Date();
-        cal.setTime(now);
-        long endTime = cal.getTimeInMillis();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        long startTime = cal.getTimeInMillis();
 
-        final DataReadRequest readRequest = new DataReadRequest.Builder()
-                .read(DataType.TYPE_CALORIES_EXPENDED)
-                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                .build();
-
-        DataReadResult dataReadResult =
-                Fitness.HistoryApi.readData(mClient, readRequest).await(0, TimeUnit.MILLISECONDS);
-
-        DataSet dailyTotalCalories = dataReadResult.getDataSet(DataType.TYPE_CALORIES_EXPENDED);
-
-        int totalCalories = 0;
-
-        for (DataPoint dp : dailyTotalCalories.getDataPoints()) {
-            for (Field field : dp.getDataType().getFields()) {
-                int calories = dp.getValue(field).asInt();
-
-                totalCalories += calories;
-
-
-            }
-        }
-        return readRequest;
-    }
-
-    private class ViewDailyCalories extends AsyncTask<Void, Void, String> {
-        TextView calories = (TextView) findViewById(R.id.calories);
-
-        protected String doInBackground(Void... params) {
-
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    calories.setText("3");
-                    Log.e("Calories", "Calories: " + GetCaloriesDataForToday());
-
-                }
-            });
-
-
-            GetCaloriesDataForToday();
-
-
-            return null;
-        }
-    }
-
-    private void readCalories() {
-
-        new ViewDailyCalories().execute();
-
-    }
 
     private void readData() {
-        new VerifyDataTask().execute();
+        new DailySteps().execute();
     }
 
     private void readWeek() {
