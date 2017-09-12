@@ -46,27 +46,13 @@
 
         android:layout_centerInParent="true"
 
-        android:text="Tab 2"
+        android:text="Version 0.1 Made by me! ;)"
 
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 
 
-    <Button
 
-        android:id="@+id/button"
-
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-
-        android:layout_below="@+id/textView"
-
-        android:layout_centerHorizontal="true"
-
-        android:layout_marginTop="30dp"
-
-        android:text="Communicate to Activity"/>
 
 
 

@@ -18,74 +18,28 @@
         android:layout_height="350dp"
         android:layout_centerInParent="true"
         app:strokeSize="10dp"
-        app:valueStrokeColor="#ff0000"
-        app:backStrokeColor="#00ff00"
+        app:valueStrokeColor="#ffff"
+        app:backStrokeColor="@color/colorAccent"
         app:animationMode="overdraw"/>
 </FrameLayout>
-    <TextView
 
-        android:id="@+id/textView"
-
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-
-        android:layout_centerInParent="true"
-
-        android:text="Tab 1"
-
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-    <TextView
-        android:id="@+id/calories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/myTextView"
-        android:layout_centerHorizontal="true"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
 <TextView
 
-    android:id="@+id/myTextView"
-    android:layout_centerHorizontal="true"
+    android:id="@+id/mySteps"
+    android:layout_centerInParent="true"
     android:padding="10dp"
+    android:textSize="50sp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text=""/>
-    <Button
-
-        android:id="@+id/button"
-
+    <TextView
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/mySteps"
+        android:textSize="40sp"
+        android:textColor="#125688"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
-
-        android:layout_below="@+id/textView"
-
-        android:layout_centerHorizontal="true"
-
-        android:layout_marginTop="30dp"
-
-        android:text="Fragment to Activity"/>
-
-
-
-    <Button
-
-        android:id="@+id/button2"
-
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-
-        android:layout_below="@+id/button"
-
-        android:layout_centerHorizontal="true"
-
-        android:layout_marginTop="30dp"
-
-        android:text="Fragment to Fragment 2"/>
-
+        android:text="STEPS"/>
 
 
 </RelativeLayout>

@@ -6,15 +6,15 @@
     app:theme="@style/MyAppTheme.Base">
 
     <item android:id="@+id/start"
-        android:title="Connect"
-        android:orderInCategory="100"
+        android:title="Reconnect"
+        android:orderInCategory="3"
         app:showAsAction="never"
         />
 
     <item android:id="@+id/pause"
         android:title="Pause"
         android:orderInCategory="2"
-        app:showAsAction="always"
+        app:showAsAction="never"
         android:icon="@drawable/ic_pause_white_24dp"/>
 
     <item android:id="@+id/action_read_data"

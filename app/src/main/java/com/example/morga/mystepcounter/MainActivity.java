@@ -53,10 +53,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 
-import static com.example.morga.mystepcounter.R.id.calories;
-import static com.example.morga.mystepcounter.R.id.myTextView;
-import static com.example.morga.mystepcounter.R.id.sevenDays;
-import static com.example.morga.mystepcounter.R.id.textView;
+
 
 /**
  * Combine Recording API and History API of the Google Fit platform
@@ -96,16 +93,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         TabFragment2 tabFragment2 = new TabFragment2();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -216,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                             @Override
                             public void onConnected(Bundle bundle) {
                                 Log.i(TAG, "Connected!!!");
-                                Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
                                 // Now you can make calls to the Fitness APIs.  What to do?
                                 // Subscribe to some data sources!
                                 subscribe();
@@ -267,14 +254,22 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                             if (status.getStatusCode()
                                     == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
                                 Log.i(TAG, "Existing subscription for activity detected.");
-                                Toast.makeText(getApplicationContext(), "Existing subscription for activity detected.", Toast.LENGTH_LONG).show();
+                               // Toast.makeText(getApplicationContext(), "Existing subscription for activity detected.", Toast.LENGTH_LONG).show();
                             } else {
                                 Log.i(TAG, "Successfully subscribed!");
-                                Toast.makeText(getApplicationContext(), "Successfully subscribed!", Toast.LENGTH_LONG).show();
+                                Snackbar.make(
+                                        MainActivity.this.findViewById(R.id.main_content),
+                                         "You are connected!",
+                                        Snackbar.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Successfully subscribed!", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Log.w(TAG, "There was a problem subscribing.");
-                            Toast.makeText(getApplicationContext(), "There was a problem subscribing.", Toast.LENGTH_LONG).show();
+                            Snackbar.make(
+                                    MainActivity.this.findViewById(R.id.main_content),
+                                    "There was a problem connecting.",
+                                    Snackbar.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "There was a problem subscribing.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -286,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
      */
 
     private class DailySteps extends AsyncTask<Void, Void, Long> {
-        TextView steps = (TextView) findViewById(R.id.myTextView);
+        TextView steps = (TextView) findViewById(R.id.mySteps);
 
         @Override
         protected void onPreExecute() {
@@ -349,11 +344,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
             steps.setText(String.valueOf(total));
             //Timer myTimer = new Timer();
             //myTimer.schedule(new TimerTask() {
-            //  @Override
+              //@Override
             //public void run() {
-            //   readData();
+              // readData();
             //}
-            //}, 10000);
+            //}, 5000);
 
             //Snackbar.make(
               //      MainActivity.this.findViewById(R.id.main_content),
