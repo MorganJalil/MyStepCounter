@@ -275,6 +275,36 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 });
     }
 
+    private void cancelSubscriptions() {
+        // To create a subscription, invoke the Recording API. As soon as the subscription is
+        // active, fitness data will start recording.
+
+        Fitness.RecordingApi.unsubscribe(mClient, DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.isSuccess()) {
+                            if (status.getStatusCode()
+                                    == FitnessStatusCodes.SUCCESS_LISTENER_NOT_REGISTERED_FOR_FITNESS_DATA_UPDATES) {
+                                Log.i(TAG, "Already unsubscribed.");
+                                Toast.makeText(getApplicationContext(), "Already unsubscribed.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Log.i(TAG, "Successfully unsubscribed!");
+                                Snackbar.make(
+                                        MainActivity.this.findViewById(R.id.main_content),
+                                        "Pause mode on!",
+                                        Snackbar.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Successfully unsubscribed!", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Log.w(TAG, "There was a problem unsubscribing.");
+                            Toast.makeText(getApplicationContext(), "There was a problem unsubscribing.", Toast.LENGTH_LONG).show();
+                            setContentView(R.layout.activity_main);
+                        }
+                    }
+                });
+    }
+
     /**
      * Read the current daily step total, computed from midnight of the current day
      * on the device's current timezone.
@@ -459,29 +489,5 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
     }
 
 
-    private void cancelSubscriptions() {
-        // To create a subscription, invoke the Recording API. As soon as the subscription is
-        // active, fitness data will start recording.
 
-        Fitness.RecordingApi.unsubscribe(mClient, DataType.TYPE_STEP_COUNT_CUMULATIVE)
-                .setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        if (status.isSuccess()) {
-                            if (status.getStatusCode()
-                                    == FitnessStatusCodes.SUCCESS_LISTENER_NOT_REGISTERED_FOR_FITNESS_DATA_UPDATES) {
-                                Log.i(TAG, "Already unsubscribed.");
-                                Toast.makeText(getApplicationContext(), "Already unsubscribed.", Toast.LENGTH_LONG).show();
-                            } else {
-                                Log.i(TAG, "Successfully unsubscribed!");
-                                Toast.makeText(getApplicationContext(), "Successfully unsubscribed!", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Log.w(TAG, "There was a problem unsubscribing.");
-                            Toast.makeText(getApplicationContext(), "There was a problem unsubscribing.", Toast.LENGTH_LONG).show();
-                            setContentView(R.layout.activity_main);
-                        }
-                    }
-                });
-    }
 }

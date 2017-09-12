@@ -28,14 +28,15 @@
     android:id="@+id/mySteps"
     android:layout_centerInParent="true"
     android:padding="10dp"
-    android:textSize="50sp"
+    android:textSize="80sp"
+    android:textColor="#ffff"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text=""/>
     <TextView
         android:layout_centerInParent="true"
         android:layout_below="@+id/mySteps"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:textColor="#125688"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

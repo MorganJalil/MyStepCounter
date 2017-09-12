@@ -6,7 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.morga.mystepcounter.MainActivity">
+    tools:context="com.example.morga.mystepcounter.MainActivity"
+    android:background="@drawable/gradient_bg"
+
+>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -51,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:textColor= "#ffffff"
-            android:background="#125688"
+            android:background="#0099cc"
             android:layout_gravity="top" >
         </android.support.v4.view.PagerTabStrip>
 
