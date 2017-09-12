@@ -17,5 +17,6 @@
 **2017-09-08:** Totally remade Fragments with tabs and swipes to a much simpler one.  
 **2017-09-09:** Researched how to send data to fragment from asynchronous tasks.  
 **2017-09-10:** Implemented data to fragments under Asynchronous tasks.   
-**2017-09-11:** Fixed permission not asking by bugtest and starting with donut chart.    
+**2017-09-11:** Fixed permission not asking by bugtest and starting with donut chart.   
+**2017-09-12:** Scratched donut charts and data 7 days back because of time is almost up. Still this is a good foundation.  
 
