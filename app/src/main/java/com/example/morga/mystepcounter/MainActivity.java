@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
 
         buildFitnessClient();
-        readWeek();
+
 
     }
 
