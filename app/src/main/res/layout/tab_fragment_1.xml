@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tab1"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
-
     android:orientation="vertical">
-<FrameLayout
-    android:layout_centerVertical="true"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <com.txusballesteros.widgets.FitChart
-        android:id="@+id/fitChart"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_centerInParent="true"
-        app:strokeSize="10dp"
-        app:valueStrokeColor="#ffff"
-        app:backStrokeColor="@color/colorAccent"
-        app:animationMode="overdraw"/>
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
 
-<TextView
+        <com.txusballesteros.widgets.FitChart
+            android:id="@+id/fitChart"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            app:animationMode="overdraw"
+            app:backStrokeColor="@color/colorAccent"
+            app:strokeSize="10dp"
+            app:valueStrokeColor="#ffff" />
+    </FrameLayout>
 
-    android:id="@+id/mySteps"
-    android:layout_centerInParent="true"
-    android:padding="10dp"
-    android:textSize="80sp"
-    android:textColor="#ffff"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text=""/>
     <TextView
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/mySteps"
-        android:textSize="30sp"
-        android:textColor="#125688"
+        android:id="@+id/mySteps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="STEPS"/>
+        android:layout_centerInParent="true"
+        android:padding="10dp"
+        android:text=""
+        android:textColor="#ffff"
+        android:textSize="80sp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mySteps"
+        android:layout_centerInParent="true"
+        android:text="STEPS"
+        android:textColor="#125688"
+        android:textSize="30sp" />
 
 </RelativeLayout>

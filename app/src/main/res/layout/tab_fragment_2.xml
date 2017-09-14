@@ -1,59 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tab2"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
-
     android:orientation="vertical">
 
-
-
     <TextView
-
         android:id="@+id/textView1"
-
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
-
         android:layout_alignParentTop="true"
-
         android:layout_centerHorizontal="true"
-
         android:layout_marginTop="20dp"
-
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-
-        android:id="@+id/sevenDays"
-
+        android:id="@+id/seven_days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:padding="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""/>
+        android:text="" />
 
     <TextView
-
         android:id="@+id/textView"
-
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
-
         android:layout_centerInParent="true"
-
-        android:text="Version 0.1 Made by me! ;)"
-
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-
-
-
-
-
+        android:text="Under contruction"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffff"
+        android:textSize="40sp" />
 
 </RelativeLayout>

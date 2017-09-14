@@ -1,14 +1,9 @@
 package com.example.morga.mystepcounter;
 
-
-
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -18,11 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,22 +29,15 @@ import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
-import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DailyTotalResult;
 import com.google.android.gms.fitness.result.DataReadResult;
-
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
-
 
 
 /**
@@ -66,10 +51,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
     public static final String TAG = "StepCounter";
     private GoogleApiClient mClient = null;
 
-
     private PagerAdapter adapter;
     private TabLayout tabLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-
         TabFragment2 tabFragment2 = new TabFragment2();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.container, tabFragment2);
@@ -101,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
 
         buildFitnessClient();
-
     }
 
 
@@ -146,34 +127,25 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         }
         return super.onOptionsItemSelected(item);
     }
-
+    /**
+     * templates with interface IFragmentToActivity
+     * to communicate between fragments and to fragments
+     * authenticate a user with Google Play Services.
+     */
     @Override
-
     public void showToast(String msg) {
-
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-
     }
-
 
     @Override
-
     public void communicateToFragment2() {
-
         TabFragment2 fragment = (TabFragment2) adapter.getFragment(1);
-
         if (fragment != null) {
-
             fragment.fragmentCommunication();
-
         } else {
-
             Log.i(TAG, "Fragment 2 is not initialized");
-
         }
-
     }
-
 
     /**
      * Build a {@link GoogleApiClient} to authenticate the user and allow the application
@@ -195,9 +167,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                             @Override
                             public void onConnected(Bundle bundle) {
                                 Log.i(TAG, "Connected!!!");
-                                //Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_SHORT).show();
-                                // Now you can make calls to the Fitness APIs.  What to do?
-                                // Subscribe to some data sources!
+
+
+                                /**
+                                 * autosubscribe and autoread daily steps
+                                 */
                                 subscribe();
                                 readData();
                             }
@@ -303,23 +277,14 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
      */
 
     private class DailySteps extends AsyncTask<Void, Void, Long> {
+
         TextView steps = (TextView) findViewById(R.id.mySteps);
-
-        @Override
-        protected void onPreExecute() {
-
-            //steps.setText("");
-        }
-
-
         protected Long doInBackground(Void... params) {
-
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     steps.setText("");
-
                 }
             });
 
@@ -336,14 +301,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 Log.w(TAG, "There was a problem getting the step count.");
             }
             Log.i(TAG, "Total steps: " + total);
-            //Snackbar.make(
-            //       MainActivity.this.findViewById(R.id.main_content),
-            //     "Steps: " + total,
-            //   Snackbar.LENGTH_SHORT).show();
-
 
             return total;
-
         }
 
         @Override
@@ -364,6 +323,12 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
                 transaction.commit();
             }
             steps.setText(String.valueOf(total));
+
+            /**
+             * If I want a timer to auto-update
+             * stepData, but its unnecessary.
+             */
+
             //Timer myTimer = new Timer();
             //myTimer.schedule(new TimerTask() {
               //@Override
@@ -371,12 +336,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
               // readData();
             //}
             //}, 5000);
-
-
         }
     }
-
-
 
     private DataReadRequest displayLastWeeksData() {
         Calendar cal = Calendar.getInstance();
@@ -389,9 +350,6 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         java.text.DateFormat dateFormat = DateFormat.getDateInstance();
         Log.e("History", "Range Start: " + dateFormat.format(startTime));
         Log.e("History", "Range End: " + dateFormat.format(endTime));
-
-
-//daysSeven.setText(String.valueOf(startDate + endDate));
 
         Snackbar.make(
                 MainActivity.this.findViewById(R.id.main_content),
@@ -423,14 +381,13 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
             Log.e("History", "Number of returned DataSets: " + dataReadResult.getDataSets().size());
             for (DataSet dataSet : dataReadResult.getDataSets()) {
                 showDataSet(dataSet);
-
             }
         }
         return readRequest;
     }
 
     private void showDataSet(DataSet dataSet) {
-
+         TextView sevenDays = (TextView) findViewById(R.id.seven_days);
         Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
 
         DateFormat dateFormat = DateFormat.getDateInstance();
@@ -444,29 +401,17 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
             for (Field field : dp.getDataType().getFields()) {
                 Log.e("History", "\tField: " + field.getName() +
                         " Value: " + dp.getValue(field));
-                //Snackbar.make(
-                //      MainActivity.this.findViewById(R.id.main_activity_view),
-                //    String.format(dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS))),
-                //  Snackbar.LENGTH_SHORT).show();
             }
-
         }
-
     }
 
-
     private class ViewWeekStepCountTask extends AsyncTask<Void, Void, Void> {
-
         protected Void doInBackground(Void... params) {
-
             displayLastWeeksData();
-
 
             return null;
         }
     }
-
-
 
     private void readData() {
         new DailySteps().execute();
@@ -474,10 +419,5 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
     private void readWeek() {
         new ViewWeekStepCountTask().execute();
-
-
     }
-
-
-
 }
