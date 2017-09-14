@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
     private PagerAdapter adapter;
     private TabLayout tabLayout;
-    SelectedBundle selectedBundle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,16 +102,8 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
 
         buildFitnessClient();
 
-
     }
 
-    public interface SelectedBundle {
-        void onBundleSelect(Bundle bundle);
-    }
-
-    public void setOnBundleSelected(SelectedBundle selectedBundle) {
-        this.selectedBundle = selectedBundle;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -380,37 +372,11 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
             //}
             //}, 5000);
 
-            //Snackbar.make(
-              //      MainActivity.this.findViewById(R.id.main_content),
-                ////  Snackbar.LENGTH_SHORT).show();
 
         }
     }
 
-    private void showDataSet(DataSet dataSet) {
 
-        Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
-
-        DateFormat dateFormat = DateFormat.getDateInstance();
-        DateFormat timeFormat = DateFormat.getTimeInstance();
-
-        for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.e("History", "Data point:");
-            Log.e("History", "\tType: " + dp.getDataType().getName());
-            Log.e("History", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.e("History", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            for (Field field : dp.getDataType().getFields()) {
-                Log.e("History", "\tField: " + field.getName() +
-                        " Value: " + dp.getValue(field));
-                //Snackbar.make(
-                //      MainActivity.this.findViewById(R.id.main_activity_view),
-                //    String.format(dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS))),
-                //  Snackbar.LENGTH_SHORT).show();
-            }
-
-        }
-
-    }
 
     private DataReadRequest displayLastWeeksData() {
         Calendar cal = Calendar.getInstance();
@@ -463,11 +429,35 @@ public class MainActivity extends AppCompatActivity implements IFragmentToActivi
         return readRequest;
     }
 
-    private class ViewWeekStepCountTask extends AsyncTask<Void, Void, String> {
+    private void showDataSet(DataSet dataSet) {
 
-        protected String doInBackground(Void... params) {
-            TextView daysSeven = (TextView) findViewById(R.id.sevenDays);
+        Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
 
+        DateFormat dateFormat = DateFormat.getDateInstance();
+        DateFormat timeFormat = DateFormat.getTimeInstance();
+
+        for (DataPoint dp : dataSet.getDataPoints()) {
+            Log.e("History", "Data point:");
+            Log.e("History", "\tType: " + dp.getDataType().getName());
+            Log.e("History", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+            Log.e("History", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+            for (Field field : dp.getDataType().getFields()) {
+                Log.e("History", "\tField: " + field.getName() +
+                        " Value: " + dp.getValue(field));
+                //Snackbar.make(
+                //      MainActivity.this.findViewById(R.id.main_activity_view),
+                //    String.format(dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS))),
+                //  Snackbar.LENGTH_SHORT).show();
+            }
+
+        }
+
+    }
+
+
+    private class ViewWeekStepCountTask extends AsyncTask<Void, Void, Void> {
+
+        protected Void doInBackground(Void... params) {
 
             displayLastWeeksData();
 
