@@ -19,4 +19,6 @@
 **2017-09-10:** Implemented data to fragments under Asynchronous tasks.   
 **2017-09-11:** Fixed permission not asking by bugtest and starting with donut chart.   
 **2017-09-12:** Scratched donut charts and data 7 days back because of time is almost up. Still this is a good foundation.  
+**2017-09-13:** small ui/ux fixes.  
+**2017-09-14:** Was going to tidy up det code and suddenly I got data for 7 days working, but only in log because time is up.  
 
